@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Post</title>
+ 
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+   
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <style>
+
+
+ 
+body {
+    font-family: 'Poppins', sans-serif;
+    color: black;
+    background:white;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+.profile-photo {
+    width: 2.7rem;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    overflow: hidden;
+}
+img {
+    display: block;
+    width: 100%;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Navbar styles */
+
+
+nav {
+    position: relative; /* Set position to relative to allow absolute positioning of child elements */
+    background-color: #051f39;
+    padding: 10px 0;
+}
+
+nav .profile-photo {
+    position: absolute;
+    top: 50%; /* Position the top edge of the profile photo at the vertical center of the navbar */
+    right: 20px;
+    transform: translateY(-50%); /* Adjust position to center the profile photo vertically */
+    width: 100px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden; /* Hide any excess image content */
+    border: 2px solid #fff;
+}
+
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo {
+    color: #fff;
+    font-size: 24px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 5px 30px;
+    margin-left: 90px;
+}
+
+.notifications, .messages {
+    color: #fff;
+    font-size: 20px;
+    margin-left: 9px; /* Adjusted margin to make the icons closer */
+}
+
+.create {
+    display: flex;
+    align-items: center;
+}
+
+.create button {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.profile-photo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 20px;
+}
+
+
+/* Notification, message, and events icons */
+.icons {
+    display: flex;
+    align-items: center;
+}
+
+.icons i {
+    font-size: 24px; /* Adjust icon size */
+    margin-right: 15px; /* Space between icons */
+    cursor: pointer;
+}
+
+/* Styling for the search bar */
+
+
+/* Create button and profile photo */
+.create {
+    display: flex;
+    align-items: center;
+}
+
+.btn-primary {
+    background-color: #007bff; 
+    color: #fff; 
+    padding: 8px 15px; 
+    border-radius: 5px; 
+    cursor: pointer;
+    margin-right: 10px; 
+
+.profile-photo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
+/*   Style the popup form............................................... */
+      .popup-form {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+/* Style the form container............................. */
+.form-container {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+#postForm {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#postForm div {
+    margin-bottom: 15px;
+}
+
+#postForm label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+#postContent {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="file"] {
+    /* Remove display: none; */
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+input[type="file"] + label {
+    display: inline-block;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="file"] + label::before {
+    content: "Choose File";
+}
+
+input[type="file"] + label:hover {
+    background-color: #0056b3;
+}
+
+button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Close button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+
+/* Styling for posted items............................................................... */
+.post {
+    margin: 10px auto; /* Center the post items */
+    padding: 30px;
+    width: 70%;
+
+    max-width: 600px;
+   
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow:40px 20px 30px 1px rgba(0, 0, 0, 0.6);
+}
+.post-content {
+    display: flex;
+    align-items: center; /* Align items vertically */
+}
+
+.post-content img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+
+.post img {
+    width:90%;
+    height: 400px;
+    border-radius: 5%;
+    margin-right: 10px;
+}
+
+.post p {
+    margin: 10px 0;
+}
+
+.post img.post-image {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    border-radius: 8px;
+}
+/* Style the comment section .....................................................*/
+.comment-section {
+    margin-top: 20px;
+}
+
+.comment {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.comment img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.comment p {
+    margin: 0;
+}
+
+.comment-form {
+    margin-top: 10px;
+}
+
+.comment-form input[type="text"] {
+    width: calc(100% - 80px);
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.comment-form button {
+    width: 80px;
+    padding: 5px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.comment-form button:hover {
+    background-color: #0056b3;
+}
+
+
+.like-comment.liked i {
+    color: red;
+    background-color: black;
+}
+
+
+.show-more-btn,
+.show-less-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.show-more-btn:hover,
+.show-less-btn:hover {
+    background-color: #0056b3;
+}
+
+*{
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  text-decoration: none;
+}
+body {
+  font-family: 'Roboto', sans-serif;
+}
+.sidebar {
+  position: fixed;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  background: #042331;
+  transition: all .5s ease;
+}
+.sidebar header {
+  font-size: 22px;
+  color: white;
+  line-height: 70px;
+  text-align: center;
+  background: #063146;
+  user-select: none;
+}
+.sidebar ul a{
+  display: block;
+  height: 100%;
+  width: 100%;
+  line-height: 65px;
+  font-size: 20px;
+  color: white;
+  padding-left: 40px;
+  box-sizing: border-box;
+  border-bottom: 1px solid black;
+  border-top: 1px solid rgba(255,255,255,.1);
+  transition: .4s;
+}
+ul li:hover a{
+  padding-left: 50px;
+}
+.sidebar ul a i{
+  margin-right: 16px;
+}
+#check{
+  display: none;
+}
+label #btn,label #cancel{
+  position: absolute;
+  background: #042331;
+  border-radius: 3px;
+  cursor: pointer;
+}
+label #btn{
+  left: 40px;
+  top: 25px;
+  font-size: 35px;
+  color: white;
+  padding: 6px 12px;
+  transition: all .5s;
+}
+label #cancel{
+  z-index: 1111;
+  left: -195px;
+  top: 17px;
+  font-size: 30px;
+  color: #0a5275;
+  padding: 4px 9px;
+  transition: all .5s ease;
+}
+#check:checked ~ .sidebar{
+  left: 0;
+}
+#check:checked ~ label #btn{
+  left: 250px;
+  opacity: 0;
+  pointer-events: none;
+}
+#check:checked ~ label #cancel{
+  left: 195px;
+}
+#check:checked ~ section{
+  margin-left: 250px;
+}
+section{
+  background: url(bg.jpeg) no-repeat;
+  background-position: center;
+  background-size: cover;
+  height: 100vh;
+  transition: all .5s;
+}
+
+/* Style for the logout button */
+form[action="/logout"] {
+  display: inline; /* Ensures the form and button are displayed in the same line */
+  margin: 0; /* Resetting margin */
+  padding-left:40px; /* Resetting padding */
+}
+
+form[action="/logout"] button[type="submit"] {
+  background-color: #f44336; /* Red color for logout button */
+  color: white; /* Text color */
+  border: none; /* Removing default button border */
+  padding: 8px 16px; /* Adding padding for better appearance */
+  cursor: pointer; /* Changing cursor to pointer on hover */
+  border-radius: 4px; /* Adding border radius for rounded corners */
+}
+
+form[action="/logout"] button[type="submit"]:hover {
+  background-color: #d32f2f; /* Darker shade of red on hover */
+}
+
+/* Style for the post button */
+#openForm {
+  background-color: #4caf50; /* Green color for post button */
+  color: white; /* Text color */
+  border: none; /* Removing default button border */
+  padding: 8px 16px; /* Adding padding for better appearance */
+  cursor: pointer; /* Changing cursor to pointer on hover */
+  border-radius: 4px; /* Adding border radius for rounded corners */
+}
+
+#openForm:hover {
+  background-color: #388e3c; /* Darker shade of green on hover */
+}
+
+
+
+
+@media only screen and (max-width: 767px) {
+    /* Popup form styles */
+
+
+
+    .form-container {
+        margin: 20% auto; 
+    }
+
+    .post {
+        margin: 10px auto; /* Center the post items */
+        position:fix;
+        padding: 1rem;
+        width: 100%; /* Adjust width for smaller screens */
+      
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 40px 20px 30px 1px rgba(0, 0, 0, 0.6);
+    }
+
+    .post img {
+        width: 100%; /* Make images fill the container */
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .comment img {
+        width: 40px; /* Increase image size for better visibility */
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .comment-form input[type="text"] {
+        width: calc(100% - 120px); /* Adjust input width for smaller screens */
+    }
+
+    .comment-form button {
+        width: 100px; /* Increase button width for better touchability */
+        padding: 10px;
+    }
+
+    .show-more-btn,
+    .show-less-btn {
+        padding: 10px 20px; /* Increase button padding for better touchability */
+        margin-top: 15px;
+    }
+
+    /* Navigation styles */
+
+}
+
+
+.centered {
+    max-width: 400px; /* Set maximum width */
+    float: right; /* Position div to the right */
+    text-align: center; /* Center text horizontally */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow */
+    padding: 20px; /* Add padding for spacing */
+    background-color: #f4f4f4; /* Background color */
+}
+
+.centered h1 {
+    margin-left: 0; /* Reset margin for h1 */
+    font-size: 24px; /* Example font size */
+    color: #333; /* Example text color */
+}
+
+
+
+    </style>
+
+<!--   ...................................................... -->
+    <style>
+       .card-container {
+    position: absolute;
+    top: 20%; /* Adjust as needed */
+    left: 0;
+    transform: translateY(-50%);
+    padding: 20px;
+    width: 200px; /* Set card width */
+}
+
+.event-container {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    transition: box-shadow 0.3s ease;
+}
+
+.event-container:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.event-container img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.event-details {
+    flex-grow: 1; /* Take remaining space */
+}
+
+.event-details h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.like-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 24px;
+    color: #ccc;
+    transition: color 0.3s ease;
+}
+
+.like-button:hover {
+    color: #ff5252;
+}
+
+
+
+/* CSS for Navbar */
+
+
+/* CSS for Search Bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    max-width: 600px; /* Limit the width of the search bar */
+    margin: 0 auto; /* Center the search bar horizontally */
+}
+
+.search-bar form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.search-input {
+    width: 400px; /* Adjust input width */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 16px;
+    outline: none;
+}
+
+.search-input:focus {
+    border-color:rgb(14, 38, 61); /* Change border color on focus */
+}
+
+.search-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 10px;
+    background-color:rgb(6, 36, 65);
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-btn:hover {
+    background-color: rgb(14, 38, 61); /* Darker shade on hover */
+}
+
+    </style>
+</head>
+<body>
+ <nav>
+        <div class="container">
+            <h2 class="logo">
+                mySocial
+            </h2>
+            <div class="search-bar">
+                <form action="/search" method="post">
+                <i class="fas fa-search"></i> <!-- Font Awesome search icon -->
+        <input type="text" name="search_input" class="search-input" placeholder="Search by username">
+                     <button type="submit" class="search-btn">Search</button>
+                    </form>
+            </div>
+            <div class="notifications">
+                <i class="fas fa-bell"></i> <!-- Font Awesome notification icon -->
+            </div>
+
+            <div class="messages">
+                <i class="fas fa-envelope"></i> <!-- Font Awesome message icon -->
+            </div>
+            <div class="create">
+
+                  <form action="/logout" method="post">
+  <button type="submit">Logout</button>
+</form>
+
+<button id="openForm" class="openForm">Post</button>
+               <div class="profile-photo">
+    <a href="{{ url_for('profile', username=user.username) }}">
+        {% if image_data %}
+           
+        {% else %}
+            <img src="{{ url_for('static', filename='default_profile_photo.jpg') }}" alt="Default Profile Photo">
+        {% endif %}
+    </a>
+</div>
+
+            </div>
+        </div>
+    </nav>
+
+
+
+
+<div class="card-container">
+    <div class="event-container">
+        <img src="{{ url_for('static', filename='event.png') }}" alt="Event Image">
+
+        <div class="event-details">
+            <h2>Events</h2>
+            <button class="like-button"><i class="fas fa-heart"></i></button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!--HEre is the post button pop form-->
+
+
+<!--end here-->
+
+    <!-- Post Button -->
+
+
+    <!-- Popup Form -->
+     <div id="postFormPopup" class="popup-form">
+        <div class="form-container">
+            <span class="close" onclick="closeForm()">&times;</span>
+         <h1>Add New Post</h1>
+    <form id="postForm" action="/add_post" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="postContent">Post Content:</label><br>
+            <textarea id="postContent" name="post_content" placeholder="Write your post here" required></textarea>
+        </div>
+        <div>
+            <label for="postImage">Upload Image:</label><br>
+            <input type="file" id="postImage" name="post_image" accept="image/*" required>
+        </div>
+        <div>
+            <label for="resume">Documanet (PDF):</label>
+    <input type="file" id="resume" name="resume" accept="application/pdf">
+        </div>
+        <div>
+            <label for="postVideo">Upload Video:</label><br>
+            <input type="file" id="postVideo" name="post_video" accept="video/*" >
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+        </div>
+    </div>
+
+<!-- this si username to display-->
+<div class="centered">
+    <h1>Welcome, {{ user.username }}</h1>
+</div>
+
+
+    <!-- Display Posts -->
+     <div id="posts">
+    {% for post in posts[::-1] %}
+        <div class="post" id="post_{{ post._id }}">
+            <div class="post-content">
+            <img src="{{ url_for('get_user_image', username=post.author) }}" alt="User Photo" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                <b style="font-size:20px;"><p><a href="/user/{{ post.author }}">{{ post.author }}</a></p></b>
+                </div>
+            <p>{{ post.content }}</p>
+            <img src="{{ url_for('get_image', post_id=post._id) }}" alt="Post Image">
+
+            <!-- Comment Section -->
+            <div class="comment-section">
+                <h3>Comments</h3>
+
+                <div class="comment-list">
+                    {% for comment in post.comments %}
+                        <div class="comment" style="{% if loop.index > 3 %}display: none;{% endif %}">
+                            <img src="{{ url_for('get_user_image', username=comment.user_name) }}" alt="User Photo">
+                            <p><strong>{{ comment.user_name }}</strong>: {{ comment.content }}</p>
+                            <span class="like-comment" data-comment-id="{{ comment._id }}"><i class="uil uil-heart"></i></span>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if post.comments|length > 3 %}
+                    <button class="show-more-btn">Show More</button>
+                    <button class="show-less-btn" style="display: none;">Show Less</button>
+                {% endif %}
+                <!-- Comment Form -->
+                <form class="comment-form" data-post-id="{{ post._id }}">
+                    <input type="text" placeholder="Write a comment..." required>
+                    <button type="submit">Comment</button>
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+     </div>
+    <!-- Script to handle form visibility and submission -->
+    <script>
+        // Open the form popup when clicking on the "Post" button
+        document.getElementById('openForm').addEventListener('click', function() {
+            document.getElementById('postFormPopup').style.display = 'block';
+        });
+
+        // Close the form popup when clicking outside of it
+        window.addEventListener('click', function(event) {
+            var formPopup = document.getElementById('postFormPopup');
+            if (event.target == formPopup) {
+                formPopup.style.display = 'none';
+            }
+        });
+
+        // Close the form popup when clicking the close button
+        function closeForm() {
+            document.getElementById('postFormPopup').style.display = 'none';
+        }
+
+        // Handle form submission
+        document.getElementById('postForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var postContent = document.getElementById('postContent').value;
+            var postImage = document.getElementById('postImage').files[0]; // Get the selected image file
+            var formData = new FormData();
+            formData.append('post_content', postContent);
+            formData.append('post_image', postImage); // Append image file to FormData object
+
+            fetch('/add_post', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                // Close form popup after successful submission
+                closeForm();
+                // Reload page to display new post (can be optimized to append without reloading)
+                location.reload();
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+
+
+
+<script>
+    // scripts.js
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle comment submission
+    document.querySelectorAll('.comment-form').forEach(form => {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const postId = this.getAttribute('data-post-id');
+            const commentContent = this.querySelector('input[type="text"]').value;
+
+            fetch('/add_comment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    postId: postId,
+                    content: commentContent
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Append the new comment to the comments section
+                    const commentSection = document.querySelector(`#post_${postId} .comment-section`);
+                    const newComment = document.createElement('div');
+                    newComment.classList.add('comment');
+                    newComment.innerHTML = `
+                        <p>${data.userName}: ${commentContent}</p>
+                    `;
+                    commentSection.appendChild(newComment);
+                    // Clear the comment input field
+                    this.querySelector('input[type="text"]').value = '';
+                } else {
+                    console.error('Failed to add comment');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+});
+
+</script>
+ <script>
+       document.querySelectorAll('.show-more-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const commentList = this.parentElement.querySelector('.comment-list');
+        commentList.querySelectorAll('.comment').forEach((comment, index) => {
+            comment.style.display = 'flex';
+        });
+        this.style.display = 'none';
+ 0   });
+});
+
+document.querySelectorAll('.show-less-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const commentList = this.parentElement.querySelector('.comment-list');
+        commentList.querySelectorAll('.comment').forEach((comment, index) => {
+            if (index >= 3) {
+                comment.style.display = 'none';
+            }
+        });
+        this.style.display = 'none';
+        const showMoreBtn = this.parentElement.querySelector('.show-more-btn');
+        showMoreBtn.style.display = 'block';
+    });
+});
+
+    </script>
+
+      <script>
+          document.querySelectorAll('.show-more-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const commentList = this.parentElement.querySelector('.comment-list');
+        commentList.querySelectorAll('.comment').forEach((comment, index) => {
+            comment.style.display = 'flex';
+        });
+        const showLessBtn = this.parentElement.querySelector('.show-less-btn');
+        showLessBtn.style.display = 'block';
+        this.style.display = 'none';
+    });
+});
+
+document.querySelectorAll('.show-less-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const commentList = this.parentElement.querySelector('.comment-list');
+        commentList.querySelectorAll('.comment').forEach((comment, index) => {
+            if (index >= 3) {
+                comment.style.display = 'none';
+            }
+        });
+        const showMoreBtn = this.parentElement.querySelector('.show-more-btn');
+        showMoreBtn.style.display = 'block';
+        this.style.display = 'none';
+    });
+});
+
+      </script>
+<script>
+ // Handle liking comments
+document.querySelectorAll('.like-comment').forEach(likeButton => {
+    likeButton.addEventListener('click', function() {
+        const commentId = this.getAttribute('data-comment-id');
+        fetch('/like_comment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                commentId: commentId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update UI to reflect that the comment has been liked
+                this.classList.add('liked'); // Add the 'liked' class to the heart icon container
+                // Optionally, you can update the like count or display a message
+            } else {
+                console.error('Failed to like comment');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
+
+</script>
+
+</body>
+</html>
