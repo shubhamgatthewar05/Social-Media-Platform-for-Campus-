@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
    
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
     <style>
 
 
@@ -709,15 +710,15 @@ form[action="/logout"] button[type="submit"]:hover {
 </form>
 
 <button id="openForm" class="openForm">Post</button>
-               <div class="profile-photo">
-    <a href="{{ url_for('profile', username=user.username) }}">
-        {% if image_data %}
-           
-        {% else %}
+    <div class="profile-photo">
+        <a href="{{ url_for('profile', username=user.username) }}">
+            {% if image_data %}
+            <img src="data:image/jpeg;base64,{{ image_data }}" alt="Profile Photo">
+            {% else %}
             <img src="{{ url_for('static', filename='default_profile_photo.jpg') }}" alt="Default Profile Photo">
-        {% endif %}
-    </a>
-</div>
+            {% endif %}
+        </a>
+    </div>
 
             </div>
         </div>
@@ -797,15 +798,18 @@ form[action="/logout"] button[type="submit"]:hover {
             <div class="comment-section">
                 <h3>Comments</h3>
 
-                <div class="comment-list">
-                    {% for comment in post.comments %}
-                        <div class="comment" style="{% if loop.index > 3 %}display: none;{% endif %}">
-                            <img src="{{ url_for('get_user_image', username=comment.user_name) }}" alt="User Photo">
-                            <p><strong>{{ comment.user_name }}</strong>: {{ comment.content }}</p>
-                            <span class="like-comment" data-comment-id="{{ comment._id }}"><i class="uil uil-heart"></i></span>
-                        </div>
-                    {% endfor %}
+            <div class="comment-list">
+                {% for comment in post.comments or [] %}
+                <div class="comment" {% if loop.index> 3 %}style="display:none;"{% endif %}>
+                    <img src="{{ url_for('get_user_image', username=comment.user_name) }}" alt="User Photo">
+                    <p><strong>{{ comment.user_name }}</strong>: {{ comment.content }}</p>
+                    <span class="like-comment" data-comment-id="{{ comment._id|string }}">
+                        <i class="uil uil-heart"></i>
+                    </span>
                 </div>
+                {% endfor %}
+            </div>
+
                 {% if post.comments|length > 3 %}
                     <button class="show-more-btn">Show More</button>
                     <button class="show-less-btn" style="display: none;">Show Less</button>
@@ -938,34 +942,33 @@ document.querySelectorAll('.show-less-btn').forEach(btn => {
 
     </script>
 
-      <script>
-          document.querySelectorAll('.show-more-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const commentList = this.parentElement.querySelector('.comment-list');
-        commentList.querySelectorAll('.comment').forEach((comment, index) => {
-            comment.style.display = 'flex';
+     script>
+        document.querySelectorAll('.show-more-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const commentList = this.parentElement.querySelector('.comment-list');
+                commentList.querySelectorAll('.comment').forEach((comment, index) => {
+                    comment.style.display = 'flex';
+                });
+                const showLessBtn = this.parentElement.querySelector('.show-less-btn');
+                showLessBtn.style.display = 'block';
+                this.style.display = 'none';
+            });
         });
-        const showLessBtn = this.parentElement.querySelector('.show-less-btn');
-        showLessBtn.style.display = 'block';
-        this.style.display = 'none';
-    });
-});
 
-document.querySelectorAll('.show-less-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const commentList = this.parentElement.querySelector('.comment-list');
-        commentList.querySelectorAll('.comment').forEach((comment, index) => {
-            if (index >= 3) {
-                comment.style.display = 'none';
-            }
+        document.querySelectorAll('.show-less-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const commentList = this.parentElement.querySelector('.comment-list');
+                commentList.querySelectorAll('.comment').forEach((comment, index) => {
+                    if (index >= 3) {
+                        comment.style.display = 'none';
+                    }
+                });
+                const showMoreBtn = this.parentElement.querySelector('.show-more-btn');
+                showMoreBtn.style.display = 'block';
+                this.style.display = 'none';
+            });
         });
-        const showMoreBtn = this.parentElement.querySelector('.show-more-btn');
-        showMoreBtn.style.display = 'block';
-        this.style.display = 'none';
-    });
-});
-
-      </script>
+    </script>
 <script>
  // Handle liking comments
 document.querySelectorAll('.like-comment').forEach(likeButton => {

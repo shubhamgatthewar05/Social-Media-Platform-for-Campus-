@@ -102,12 +102,12 @@ def register_form():
 def profile(username):
     user = users_collection.find_one({'username': username})
     if user:
-        # Access the image data from the nested structure and decode it
-        image_data = user.get('image', '')  # Assuming image is stored as string
-        user['image'] = image_data
+        image_data = user.get('image')  
+        user['image'] = image_data if image_data else None  
         return render_template('profile.html', user=user)
     else:
         return "User not found."
+
 
 
 @app.route('/user/<username>')

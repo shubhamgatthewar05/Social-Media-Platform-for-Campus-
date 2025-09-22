@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ user.username }}'s Profile</title>
+</head>
+
+<body>
+    <h1>{{ user.username }}'s Profile</h1>
+    <p>Email: {{ user.email }}</p>
+
+    <h2>Posts:</h2>
+    {% for post in posts %}
+    <div>
+        <p>{{ post.content }}</p>
+        {% if post.image %}
+        <img src="{{ url_for('get_image', post_id=post._id) }}" width="200">
+        {% endif %}
+    </div>
+    {% endfor %}
+</body>
+
+</html>
